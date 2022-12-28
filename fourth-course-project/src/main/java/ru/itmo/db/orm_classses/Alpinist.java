@@ -21,18 +21,18 @@ public class Alpinist {
     @Column(length = 100, nullable = false)
     @Length(min = 3, message = "В имени альпиниста должно быть минимум 3 буквы")
     @NonNull
-    @Setter
     private String name;
 
     @Column(length = 200, nullable = false)
     @Size(min = 5, message = "В имени альпиниста должно быть минимум 5 букв")
     @NonNull
-    @Setter
     private String address;
 
     @Column(nullable = false)
     @Min(value = 18, message = "К восхождению в горы допускаются альпинисты старше 18 лет")
     @NonNull
-    @Setter
     private int age;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Group group;
 }

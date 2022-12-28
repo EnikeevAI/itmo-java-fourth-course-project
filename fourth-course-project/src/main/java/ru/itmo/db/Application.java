@@ -9,14 +9,15 @@ public class Application {
     public static void main(String[] args) {
         AlpinistDao alpDao = new AlpinistDao();
         alpDao.createTable();
-        Alpinist ivan = new Alpinist("Иван", "Россия", 120);
+        Alpinist ivan = new Alpinist("Иван", "Россия", 38);
+        Alpinist petr = new Alpinist("Петр", "Россия", 55);
+        Alpinist sergey = new Alpinist("Сергей", "Россия", 23);
+        Alpinist alex = new Alpinist("Alex", "Бразилия", 48);
+        Alpinist leo = new Alpinist("Alex", "Аргентина", 20);
+        Alpinist frank = new Alpinist("Frank", "Мексика", 19);
+        Alpinist steven = new Alpinist("Steven", "Великобритания", 90);
+
         alpDao.add(ivan);
-        ivan.setName("Артем");
-        alpDao.update(ivan);
-        Alpinist alpinist = alpDao.delete(ivan.getId());
-        System.out.println(alpinist.getName());
-        List<Alpinist> alpinists = alpDao.getAll();
-        System.out.println(alpinists);
 
     }
 }

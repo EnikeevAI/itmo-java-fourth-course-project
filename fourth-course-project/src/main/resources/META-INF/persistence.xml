@@ -5,7 +5,11 @@
              xsi:schemalocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
 
-    <persistence-unit name="ormLesson" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="fourthCourseProject" transaction-type="RESOURCE_LOCAL">
+
+        <class>ru.itmo.db.orm_classses.Alpinist</class>
+        <class>ru.itmo.db.orm_classses.Group</class>
+        <class>ru.itmo.db.orm_classses.Mountain</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/db_lessons"/>
