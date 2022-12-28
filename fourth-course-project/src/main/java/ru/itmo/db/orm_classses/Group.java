@@ -3,12 +3,8 @@ package ru.itmo.db.orm_classses;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_groups")

@@ -4,19 +4,20 @@ import ru.itmo.db.base.ConnectionSettings;
 import ru.itmo.db.base.Dao;
 import ru.itmo.db.base.ValidatorBase;
 import ru.itmo.db.orm_classses.Alpinist;
+import ru.itmo.db.orm_classses.Mountain;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlpinistDao implements Dao<Alpinist, Integer> {
+public class MountainDao implements Dao<Mountain, Integer> {
 
-    private ValidatorBase<Alpinist> validator;
+    private ValidatorBase<Mountain> validator;
 
-    private final String db_table = "tb_alpinists";
+    private final String db_table = "tb_mountains";
 
 
-    public AlpinistDao(){
+    public MountainDao(){
         validator = new ValidatorBase<>();
     }
 
@@ -25,8 +26,8 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
         String create = "CREATE TABLE IF NOT EXISTS "+ db_table + " (" +
                 "id SERIAL PRIMARY KEY," +
                 "name VARCHAR(100) NOT NULL," +
-                "address VARCHAR(200) NOT NULL," +
-                "age INTEGER NOT NULL" +
+                "country VARCHAR(200) NOT NULL," +
+                "height INTEGER NOT NULL" +
                 ");";
 
         try {
@@ -51,14 +52,13 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
     }
 
     @Override
-    public void add(Alpinist alpinist) {
-
-        if (!validator.validate(alpinist)) {
+    public void add(Mountain mountain) {
+        if (!validator.validate(mountain)) {
             System.out.println("Данные в таблицу " + db_table + " не добавлены. Данные не прошли валидацию");
             return;
         }
 
-        String insert = "INSERT INTO " + db_table +" (name, address, age) VALUES (?, ?, ?) RETURNING id";
+        String insert = "INSERT INTO " + db_table +" (name, country, height) VALUES (?, ?, ?) RETURNING id";
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -74,14 +74,14 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
         )){
             try (PreparedStatement statement = connection.prepareStatement(insert)){
 
-                statement.setString(1, alpinist.getName());
-                statement.setString(2, alpinist.getAddress());
-                statement.setInt(3, alpinist.getAge());
+                statement.setString(1, mountain.getName());
+                statement.setString(2, mountain.getCountry());
+                statement.setInt(3, mountain.getHeight());
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
-                    System.out.println("Данные были добавлены, идентификатор альпиниста " + id);
-                    alpinist.setId(id);
+                    System.out.println("Данные были добавлены, идентификатор горы " + id);
+                    mountain.setId(id);
                 }
             }
         } catch (SQLException e) {
@@ -90,13 +90,13 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
     }
 
     @Override
-    public void update(Alpinist alpinist) {
-        if (!validator.validate(alpinist)) {
-            System.out.println("Данные альпиниста не были изменены. Данные не прошли валидацию");
+    public void update(Mountain mountain) {
+        if (!validator.validate(mountain)) {
+            System.out.println("Данные горы не были изменены. Данные не прошли валидацию");
             return;
         }
 
-        String update = "UPDATE "+ db_table +" SET name = ?, address = ?, age = ? WHERE id = ? RETURNING id";
+        String update = "UPDATE "+ db_table +" SET name = ?, country = ?, height = ? WHERE id = ? RETURNING id";
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -110,31 +110,31 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
                 ConnectionSettings.PASSWORD
         )) {
             try (PreparedStatement statement = connection.prepareStatement(update)) {
-                statement.setString(1, alpinist.getName());
-                statement.setString(2, alpinist.getAddress());
-                statement.setInt(3, alpinist.getAge());
-                statement.setInt(4, alpinist.getId());
+                statement.setString(1, mountain.getName());
+                statement.setString(2, mountain.getCountry());
+                statement.setInt(3, mountain.getHeight());
+                statement.setInt(4, mountain.getId());
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
-                    System.out.println("Данные для альпиниста с id = "+ id + " изменены");
-                    alpinist.setId(id);
+                    System.out.println("Данные для горы с id = "+ id + " изменены");
+                    mountain.setId(id);
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Данные альпиниста c id = " + alpinist.getId() +
+            System.out.println("Данные горы c id = " + mountain.getId() +
                     " в таблице "+ db_table +" не обновлены " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Alpinist delete(Integer integer) {
+    public Mountain delete(Integer integer) {
         String delete = "DELETE FROM "+ db_table +" WHERE id = ? RETURNING id";
 
-        Alpinist alpinist = get(integer);
-        if (alpinist == null) {
-            System.out.println("Альпинист с id = " + integer + " не найден. Удаление невозможно");
+        Mountain mountain = get(integer);
+        if (mountain == null) {
+            System.out.println("Гора с id = " + integer + " не найдена. Удаление невозможно");
             return null;
         }
 
@@ -151,12 +151,11 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
                 ConnectionSettings.PASSWORD
         )){
             try (PreparedStatement statement = connection.prepareStatement(delete)){
-
                 statement.setInt(1, integer);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
-                    System.out.println("Альпинист c id = " + integer + " удален из таблицы");
-                    return alpinist;
+                    System.out.println("Гора c id = " + integer + " удалена из таблицы");
+                    return mountain;
                 }
             }
         } catch (SQLException e) {
@@ -167,8 +166,8 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
     }
 
     @Override
-    public Alpinist get(Integer integer) {
-        String select = "SELECT name, address, age FROM " + db_table + " WHERE id = ?";
+    public Mountain get(Integer integer) {
+        String select = "SELECT name, country, height FROM " + db_table + " WHERE id = ?";
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -186,11 +185,11 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     String name = resultSet.getString("name");
-                    String address = resultSet.getString("address");
-                    int age = resultSet.getInt("age");
-                    Alpinist alpinist = new Alpinist(name, address, age);
-                    alpinist.setId(integer);
-                    return alpinist;
+                    String country = resultSet.getString("country");
+                    int height = resultSet.getInt("height");
+                    Mountain mountain = new Mountain(name, country, height);
+                    mountain.setId(integer);
+                    return mountain;
                 }
             }
         } catch (SQLException e) {
@@ -201,8 +200,8 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
     }
 
     @Override
-    public List<Alpinist> getAll() {
-        List<Alpinist> alpinists = new ArrayList<>();
+    public List<Mountain> getAll() {
+        List<Mountain> mountains = new ArrayList<>();
         String select = "SELECT * FROM "+ db_table;
 
         try {
@@ -220,17 +219,17 @@ public class AlpinistDao implements Dao<Alpinist, Integer> {
                 ResultSet resultSet = statement.executeQuery(select);
                 while (resultSet.next()) {
                     String name = resultSet.getString("name");
-                    String address = resultSet.getString("address");
-                    int age = resultSet.getInt("age");
+                    String country = resultSet.getString("country");
+                    int height = resultSet.getInt("height");
                     int id = resultSet.getInt("id");
-                    Alpinist alpinist = new Alpinist(name, address, age);
-                    alpinist.setId(id);
-                    alpinists.add(alpinist);
+                    Mountain mountain = new Mountain(name, country, height);
+                    mountain.setId(id);
+                    mountains.add(mountain);
                 }
-                return alpinists;
+                return mountains;
             }
         } catch (SQLException e) {
-            System.out.println("Не удалось получить список альпинистов " + e.getMessage());
+            System.out.println("Не удалось получить список гор для восхождения " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
