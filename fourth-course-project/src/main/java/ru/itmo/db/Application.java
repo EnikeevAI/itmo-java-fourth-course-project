@@ -1,15 +1,23 @@
 package ru.itmo.db;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import ru.itmo.db.dao.AlpinistDao;
+import ru.itmo.db.dao.GroupDao;
 import ru.itmo.db.dao.MountainDao;
 import ru.itmo.db.orm_classses.Alpinist;
+import ru.itmo.db.orm_classses.Group;
 import ru.itmo.db.orm_classses.Mountain;
-
-import java.util.List;
 
 public class Application {
     public static void main(String[] args) {
-        /*AlpinistDao alpDao = new AlpinistDao();
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("fourthCourseProject");
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        AlpinistDao alpDao = new AlpinistDao();
         alpDao.createTable();
         Alpinist ivan = new Alpinist("Иван", "Россия", 38);
         Alpinist petr = new Alpinist("Петр", "Россия", 55);
@@ -24,7 +32,7 @@ public class Application {
         alpDao.add(alex);
         alpDao.add(leo);
         alpDao.add(frank);
-        alpDao.add(steven);*/
+        alpDao.add(steven);
 
         MountainDao mountainDao = new MountainDao();
         mountainDao.createTable();
@@ -34,6 +42,40 @@ public class Application {
         mountainDao.add(everest);
         mountainDao.add(elbrus);
         mountainDao.add(kilimanjaro);
+
+
+
+        Group group1 = new Group(3, everest);
+        Group group2 = new Group(4, everest);
+        GroupDao groupDao = new GroupDao(em);
+        groupDao.add(group1);
+        groupDao.add(group2);
+        //em.getTransaction().commit();
+
+
+        //em.getTransaction().begin();
+        group1.addAlpinist(ivan);
+        group1.addAlpinist(frank);
+        group1.removeAlpinist(sergey);
+        group1.removeAlpinist(ivan);
+
+        group2.addAlpinist(ivan);
+        group2.addAlpinist(petr);
+        group2.addAlpinist(sergey);
+        group2.addAlpinist(alex);
+
+
+        alpDao.update(ivan);
+
+
+        System.out.println("IIIIIIVVVVAAAAAAAANNNNN " + ivan.getGroup().getId());
+        System.out.println("GGGGRRROOOOPPPP2 " + group2.getId());
+
+        em.getTransaction().commit();
+        System.out.println("GGGGRRROOOOPPPP2 " + group2.getId());
+
+        em.close();
+        emf.close();
 
 
     }

@@ -1,17 +1,17 @@
 package ru.itmo.db.orm_classses;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_mountains")
+@NoArgsConstructor
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -34,4 +34,8 @@ public class Mountain {
     @Min(value = 100, message = "Минимальная высота горы равна 100 метрам")
     @NonNull
     private int height;
+
+    @OneToMany(mappedBy = "mountain", fetch = FetchType.LAZY)
+    private List<Group> groups;
+
 }

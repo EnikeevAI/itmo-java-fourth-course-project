@@ -3,7 +3,6 @@ package ru.itmo.db.dao;
 import ru.itmo.db.base.ConnectionSettings;
 import ru.itmo.db.base.Dao;
 import ru.itmo.db.base.ValidatorBase;
-import ru.itmo.db.orm_classses.Alpinist;
 import ru.itmo.db.orm_classses.Mountain;
 
 import java.sql.*;
