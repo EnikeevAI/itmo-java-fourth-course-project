@@ -3,8 +3,6 @@ package ru.itmo.db.base;
 import java.util.List;
 
 public interface Dao<T, PK> {
-    void createTable();
-
     // добавить информацию в таблицу
     void add(T t);
 

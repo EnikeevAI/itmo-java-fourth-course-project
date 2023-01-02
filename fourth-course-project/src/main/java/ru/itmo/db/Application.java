@@ -15,10 +15,12 @@ public class Application {
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("fourthCourseProject");
         EntityManager em = emf.createEntityManager();
-
         em.getTransaction().begin();
-        AlpinistDao alpDao = new AlpinistDao();
-        alpDao.createTable();
+
+        AlpinistDao alpDao = new AlpinistDao(em);
+        GroupDao groupDao = new GroupDao(em);
+        MountainDao mountainDao = new MountainDao(em);
+
         Alpinist ivan = new Alpinist("Иван", "Россия", 38);
         Alpinist petr = new Alpinist("Петр", "Россия", 55);
         Alpinist sergey = new Alpinist("Сергей", "Россия", 23);
@@ -34,8 +36,7 @@ public class Application {
         alpDao.add(frank);
         alpDao.add(steven);
 
-        MountainDao mountainDao = new MountainDao();
-        mountainDao.createTable();
+
         Mountain everest = new Mountain("Эверест", "Гималаи", 8849);
         Mountain elbrus = new Mountain("Эльбрус", "Россия", 5642);
         Mountain kilimanjaro = new Mountain("Килиманджаро", "Танзания", 5885);
@@ -43,17 +44,12 @@ public class Application {
         mountainDao.add(elbrus);
         mountainDao.add(kilimanjaro);
 
-
-
         Group group1 = new Group(3, everest);
         Group group2 = new Group(4, everest);
-        GroupDao groupDao = new GroupDao(em);
+
         groupDao.add(group1);
         groupDao.add(group2);
-        //em.getTransaction().commit();
 
-
-        //em.getTransaction().begin();
         group1.addAlpinist(ivan);
         group1.addAlpinist(frank);
         group1.removeAlpinist(sergey);
@@ -63,9 +59,6 @@ public class Application {
         group2.addAlpinist(petr);
         group2.addAlpinist(sergey);
         group2.addAlpinist(alex);
-
-
-        alpDao.update(ivan);
 
 
         System.out.println("IIIIIIVVVVAAAAAAAANNNNN " + ivan.getGroup().getId());
