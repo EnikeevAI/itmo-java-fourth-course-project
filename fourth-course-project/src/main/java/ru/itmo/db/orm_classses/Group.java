@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.Min;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Group {
 
     @Column(nullable = false)
     @NonNull
-    private LocalDateTime dateTime;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NonNull
@@ -39,7 +40,8 @@ public class Group {
         this.maxAlpinists = maxAlpinists;
         this.mountain = mountain;
         alpinists = new ArrayList<>(maxAlpinists);
-        dateTime = LocalDateTime.now().plusMonths(1);
+        date = LocalDate.now().plusMonths(1);
+
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
