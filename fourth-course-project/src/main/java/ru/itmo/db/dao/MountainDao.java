@@ -2,14 +2,11 @@ package ru.itmo.db.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import ru.itmo.db.base.ConnectionSettings;
 import ru.itmo.db.base.Dao;
 import ru.itmo.db.base.ValidatorBase;
-import ru.itmo.db.orm_classses.Group;
 import ru.itmo.db.orm_classses.Mountain;
 
-import java.sql.*;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class MountainDao implements Dao<Mountain, Integer> {
